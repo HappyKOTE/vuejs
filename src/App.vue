@@ -4,12 +4,12 @@
         учёт финансов<addItemForm class="d-inline-block ms-2" />
     </h3>
     <div class="row">
-        <div class="col">
+        <div class="col-sm-12 col-md-6">
             <itemsList class="rounded bg-white mb-3 p-4" />
             <pagination v-if="getPagesCount > 1" />
         </div>
-        <div class="col">
-            <chart />
+        <div class="col-sm-12 col-md-6">
+            <chart class="d-none d-md-block" />
         </div>
     </div>
 </div>
