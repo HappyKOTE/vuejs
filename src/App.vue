@@ -1,32 +1,45 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+<div class="container mt-5 mb-5">
+    <h3 class="mb-5">
+        учёт финансов<addItemForm class="d-inline-block ms-2" />
+    </h3>
+    <div class="row">
+        <div class="col">
+            <itemsList class="rounded bg-white mb-3 p-4 border" />
+            <pagination v-if="getPagesCount > 1" />
+        </div>
+        <div class="col">
+            <chart />
+        </div>
     </div>
-    <router-view/>
-  </div>
+</div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import chart from './components/chart.vue'
+import addItemForm from './components/addItemForm.vue'
+import itemsList from './components/itemsList.vue'
+import pagination from './components/pagination.vue'
+import { mapActions, mapGetters } from 'vuex'
 
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+export default {
+  name: 'App',
+  components: {
+    chart, addItemForm, itemsList, pagination
+  },
+  data: () => ({
+  }),
+  methods: {
+    ...mapActions(['fetchData'])
+  },
+  computed: {
+    ...mapGetters(['getPagesCount'])
+  },
+  mounted () {
+    this.fetchData()
   }
 }
+</script>
+
+<style lang="scss">
 </style>
