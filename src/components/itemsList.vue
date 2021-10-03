@@ -1,7 +1,7 @@
 <template>
 <div>
   <div v-if="getPaymentsOnPage.length === 0" class="text-center">
-    <b-progress :value="value" :max="max" height="3px"></b-progress>
+    <b-progress :value="value" :max="max" height="5px"></b-progress>
     загрузка данных
   </div>
   <transition name="fade">
@@ -17,7 +17,7 @@
         <tbody>
             <tr v-for="(payment, index) in getPaymentsOnPage" :key="payment">
                 <td>{{ (getCurrentPageNumber-1)*getPaymentsPerPage + index + 1 }}</td>
-                <td>{{ payment.date }}</td>
+                <td>{{ payment.date | moment("D MMMM YYYY") }}</td>
                 <td>{{ payment.category }}</td>
                 <td class="text-end">{{ payment.value }}</td>
             </tr>

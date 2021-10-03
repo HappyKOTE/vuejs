@@ -3,7 +3,7 @@
 
     <b-button variant="link" class="p-0" @click="modalShow = !modalShow"><b-icon-plus-circle></b-icon-plus-circle></b-button>
 
-    <b-modal id="modal" title="новый элемент учёта" hide-footer hide-header-close v-model="modalShow">
+    <b-modal id="addItemModal" hide-footer hide-header hide-header-close v-model="modalShow">
 
       <b-form @submit.stop.prevent="submit" v-if="!addCategory">
         <div class="mb-3">
@@ -105,5 +105,6 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style>
+#addItemModal .modal-content { border: none !important; }
 </style>

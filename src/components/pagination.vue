@@ -2,13 +2,13 @@
 <div>
   <ul class="pagination justify-content-center">
     <li class="page-item" :class="{'disabled':getCurrentPageNumber===1}">
-      <button type="button" class="page-link" @click="previous"><b-icon-chevron-left></b-icon-chevron-left></button>
+      <button type="button" class="page-link border-0" @click="previous"><b-icon-chevron-left></b-icon-chevron-left></button>
     </li>
     <li class="page-item" v-for="n in getPagesCount" :key="n" :class="{'active':getCurrentPageNumber===n}">
-      <button type="button" class="page-link" @click="changePage(n)">{{ n }}</button>
+      <button type="button" class="page-link border-0" @click="changePage(n)">{{ n }}</button>
     </li>
     <li class="page-item" :class="{'disabled':getCurrentPageNumber===getPagesCount}">
-      <button type="button" class="page-link" @click="next"><b-icon-chevron-right></b-icon-chevron-right></button>
+      <button type="button" class="page-link border-0" @click="next"><b-icon-chevron-right></b-icon-chevron-right></button>
     </li>
   </ul>
 </div>

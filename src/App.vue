@@ -5,7 +5,7 @@
     </h3>
     <div class="row">
         <div class="col">
-            <itemsList class="rounded bg-white mb-3 p-4 border" />
+            <itemsList class="rounded bg-white mb-3 p-4" />
             <pagination v-if="getPagesCount > 1" />
         </div>
         <div class="col">
