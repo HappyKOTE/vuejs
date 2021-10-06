@@ -33,9 +33,10 @@
             <b-icon-arrow-left></b-icon-arrow-left>
           </b-button>
         </div>
+        <label for="inputNewCategory" class="form-label">добавление категории</label>
         <div class="input-group">
-          <input type="text" class="form-control" placeholder="название" v-model="name">
-          <b-button variant="primary" type="submit">добавить категорию</b-button>
+          <input type="text" class="form-control" placeholder="название" v-model="name" id="inputNewCategory">
+          <b-button variant="primary" type="submit">добавить</b-button>
         </div>
       </b-form>
 
@@ -101,6 +102,19 @@ export default {
   mounted () {
     this.getTodayDate()
     this.categoryValidation()
+    if (this.$route.name === 'addPayment') {
+      this.modalShow = true
+      this.category = this.$route.params.payment
+      const formValue = this.$route.fullPath.split('?', 2)[1].split('=', 2)
+      if (formValue[0] === 'value') {
+        this.value = formValue[1]
+      }
+    }
+    if (this.$route.name === 'addCategory') {
+      this.modalShow = true
+      this.addCategory = true
+      this.name = this.$route.params.category
+    }
   }
 }
 </script>
