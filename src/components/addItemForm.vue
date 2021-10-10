@@ -1,11 +1,11 @@
 <template>
   <div>
 
-    <b-button variant="link" class="p-0" @click="modalShow = !modalShow"><b-icon-plus-circle></b-icon-plus-circle></b-button>
+    <b-button variant="link" class="p-0" @click="showModal = !showModal"><b-icon-plus-circle></b-icon-plus-circle></b-button>
 
-    <b-modal id="addItemModal" hide-footer hide-header hide-header-close v-model="modalShow">
+    <b-modal hide-footer hide-header hide-header-close v-model="showModal">
 
-      <b-form @submit.stop.prevent="submit" v-if="!addCategory">
+      <b-form @submit.stop.prevent="submit" v-if="!showCategoryInModal">
         <div class="mb-3">
           <label for="inputDatepicker" class="form-label">дата</label>
           <b-form-datepicker id="inputDatepicker" v-model="date" placeholder="выберите дату" locale="ru">
@@ -14,7 +14,7 @@
         <div class="mb-3">
           <div>
             <label for="inputCategory" class="form-label">категория</label>
-            <b-button variant="link" class="p-0 ms-2" @click="addCategory = true"><b-icon-plus-circle></b-icon-plus-circle></b-button>
+            <b-button variant="link" class="p-0 ms-2" @click="showCategoryInModal = !showCategoryInModal"><b-icon-plus-circle></b-icon-plus-circle></b-button>
           </div>
           <select class="form-select" id="inputCategory" v-model="category">
             <option v-for="(item, index) in getPaymentTypes" :key="index">{{ item.name }}</option>
@@ -24,19 +24,19 @@
           <label for="inputValue" class="form-label">рубли</label>
           <b-form-input v-model.number="value" id="inputValue" placeholder="введите сумму"></b-form-input>
         </div>
-        <b-button variant="primary" type="submit" class="mt-4 d-block w-100">добавить запись</b-button>
+        <b-button variant="primary" type="submit" class="mt-4 d-block w-100">сохранить</b-button>
       </b-form>
 
-      <b-form @submit.stop.prevent="addNewCategory" v-if="addCategory">
+      <b-form @submit.stop.prevent="addNewCategory" v-if="showCategoryInModal">
         <div>
-          <b-button variant="link" class="mb-2 p-0" @click="addCategory = false">
+          <b-button variant="link" class="mb-2 p-0" @click="showCategoryInModal = !showCategoryInModal">
             <b-icon-arrow-left></b-icon-arrow-left>
           </b-button>
         </div>
         <label for="inputNewCategory" class="form-label">добавление категории</label>
         <div class="input-group">
           <input type="text" class="form-control" placeholder="название" v-model="name" id="inputNewCategory">
-          <b-button variant="primary" type="submit">добавить</b-button>
+          <b-button variant="primary" type="submit">сохранить</b-button>
         </div>
       </b-form>
 
@@ -54,9 +54,9 @@ export default {
     date: '',
     category: '',
     value: 0,
-    addCategory: false,
     name: '',
-    modalShow: false
+    showModal: false,
+    showCategoryInModal: false
   }),
   methods: {
     ...mapMutations(['setNewPayment', 'setNewPaymentTypes', 'setCurrentPageNumber']),
@@ -65,7 +65,7 @@ export default {
         event.preventDefault()
         const { date, category, value } = this
         this.setNewPayment({ date, category, value })
-        this.modalShow = false
+        this.showModal = false
         this.category = ''
         this.value = 0
         this.setCurrentPageNumber(this.getPagesCount)
@@ -75,7 +75,7 @@ export default {
       if (this.categoryValidation()) {
         const { name } = this
         this.setNewPaymentTypes({ name })
-        this.addCategory = false
+        this.showCategoryInModal = false
         this.name = ''
       }
     },
@@ -93,17 +93,18 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getPaymentTypes', 'getPagesCount'])
+    ...mapGetters(['getPaymentTypes', 'getPagesCount', 'getShowModalAddPayment'])
   },
   created () {
     this.getPaymentTypes()
     this.getPagesCount()
+    this.getShowModalAddPayment()
   },
   mounted () {
     this.getTodayDate()
     this.categoryValidation()
     if (this.$route.name === 'addPayment') {
-      this.modalShow = true
+      this.showModal = true
       this.category = this.$route.params.payment
       const formValue = this.$route.fullPath.split('?', 2)[1].split('=', 2)
       if (formValue[0] === 'value') {
@@ -111,8 +112,8 @@ export default {
       }
     }
     if (this.$route.name === 'addCategory') {
-      this.modalShow = true
-      this.addCategory = true
+      this.showModal = true
+      this.showCategoryInModal = true
       this.name = this.$route.params.category
     }
   }

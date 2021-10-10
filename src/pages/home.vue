@@ -37,9 +37,14 @@ export default {
     chart, addItemForm, itemsList, pagination
   },
   data: () => ({
+    editPayment: false
   }),
   methods: {
-    ...mapActions(['fetchData'])
+    ...mapActions(['fetchData']),
+    editPayment (index) {
+      this.editPayment = true
+      console.log(index)
+    }
   },
   computed: {
     ...mapGetters(['getPagesCount'])

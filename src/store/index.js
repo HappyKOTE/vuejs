@@ -16,7 +16,8 @@ export default new Vuex.Store({
       { name: 'транспорт' },
       { name: 'обучение' },
       { name: 'развлечения' }
-    ]
+    ],
+    showModalAddPayment: false
   },
   mutations: {
     setPaymentsList (state, payload) {
@@ -30,6 +31,12 @@ export default new Vuex.Store({
     },
     setNewPaymentTypes (state, payload) {
       state.paymentTypes.push(payload)
+    },
+    setDeletePayment (state, payload) {
+      state.paymentsList.splice(payload, 1)
+    },
+    setEditPayment (state, payload) {
+      state.showModalAddPayment = true
     }
   },
   getters: {
@@ -48,6 +55,9 @@ export default new Vuex.Store({
     },
     getPaymentsPerPage: state => {
       return state.paymentsPerPage
+    },
+    getShowModalAddPayment: state => {
+      return state.showModalAddPayment
     }
   },
   actions: {
