@@ -27,6 +27,11 @@ const routes = new VueRouter({
       path: '/add/category/:category',
       name: 'addCategory',
       component: home
+    },
+    {
+      path: '/edit/payment/:payment',
+      name: 'editPayment',
+      component: home
     }
   ]
 })
@@ -35,7 +40,8 @@ const titles = {
   home: 'учёт финансов',
   page404: 'страниица не найдена',
   addPayment: 'добавление записи',
-  addCategory: 'добавление категории платежей'
+  addCategory: 'добавление категории платежей',
+  editPayment: 'редактирование записи'
 }
 
 routes.afterEach((to, from) => {

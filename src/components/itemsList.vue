@@ -62,7 +62,7 @@ export default {
       }
     },
     editPayment (index) {
-      this.setEditPayment(index)
+      this.$router.push({ path: '/edit/payment/' + index })
     },
     deletePayment (index) {
       this.setDeletePayment(index)

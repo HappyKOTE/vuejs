@@ -93,19 +93,18 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getPaymentTypes', 'getPagesCount', 'getShowModalAddPayment'])
+    ...mapGetters(['getPaymentTypes', 'getPagesCount'])
   },
   created () {
     this.getPaymentTypes()
     this.getPagesCount()
-    this.getShowModalAddPayment()
   },
   mounted () {
     this.getTodayDate()
     this.categoryValidation()
+    this.pageRoute = this.$route.name
     if (this.$route.name === 'addPayment') {
       this.showModal = true
-      this.category = this.$route.params.payment
       const formValue = this.$route.fullPath.split('?', 2)[1].split('=', 2)
       if (formValue[0] === 'value') {
         this.value = formValue[1]
@@ -115,6 +114,10 @@ export default {
       this.showModal = true
       this.showCategoryInModal = true
       this.name = this.$route.params.category
+    }
+    if (this.$route.name === 'editPayment') {
+      this.showModal = true
+      console.log(this.$route.params.payment)
     }
   }
 }
