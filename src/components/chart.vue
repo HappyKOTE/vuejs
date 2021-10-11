@@ -1,14 +1,21 @@
-<template>
-<div>
-  chart here
-</div>
-</template>
-
 <script>
+import { Doughnut, mixins } from 'vue-chartjs'
+
 export default {
-  name: 'chart'
+  extends: Doughnut,
+  mixins: [mixins.reactiveProp],
+  data: () => ({
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      legend: {
+        display: false
+      }
+    }
+  }),
+  props: ['chartdata'],
+  mounted () {
+    this.renderChart(this.chartdata, this.options)
+  }
 }
 </script>
-
-<style scoped lang="scss">
-</style>

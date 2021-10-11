@@ -54,7 +54,7 @@ export default {
     showEdit: false
   }),
   methods: {
-    ...mapMutations(['setNewPayment', 'setNewPaymentTypes', 'setCurrentPageNumber', 'setDeletePayment', 'setEditPayment', 'setAddFormKey']),
+    ...mapMutations(['setNewPayment', 'setNewPaymentTypes', 'setCurrentPageNumber', 'setDeletePayment', 'setEditPayment', 'setAddFormKey', 'setHomeKey']),
     progress () {
       for (let i = 1; i <= this.max; i++) {
         setTimeout(() => {

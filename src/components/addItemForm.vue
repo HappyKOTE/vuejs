@@ -60,7 +60,7 @@ export default {
     editMode: false
   }),
   methods: {
-    ...mapMutations(['setNewPayment', 'setNewPaymentTypes', 'setCurrentPageNumber', 'setEditPayment']),
+    ...mapMutations(['setNewPayment', 'setNewPaymentTypes', 'setCurrentPageNumber', 'setEditPayment', 'setHomeKey']),
     submit (event) {
       if (!this.editMode) {
         if (this.category && this.value > 0) {
@@ -112,7 +112,6 @@ export default {
       this.date = this.getPaymentsOnPage[indexOnPage].date
       this.category = this.getPaymentsOnPage[indexOnPage].category
       this.value = this.getPaymentsOnPage[indexOnPage].value
-      this.edit = !this.edit
     }
   },
   computed: {
@@ -155,8 +154,10 @@ export default {
       this.$router.push({ path: '/' })
     }
     if (this.$route.name === 'editPayment') {
-      if (this.$route.params.payment > 0 && this.$route.params.payment <= this.getPaymentsCount) {
-        this.pushEditData()
+      if (!this.showModal) {
+        if (this.$route.params.payment > 0 && this.$route.params.payment <= this.getPaymentsCount) {
+          this.pushEditData()
+        }
       }
     }
   }

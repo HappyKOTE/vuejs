@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :key="getHomeKey">
     <h3 class="mb-5">
       учёт финансов
       <addItemForm class="d-inline-block ms-2" />
@@ -20,7 +20,7 @@
         <pagination v-if="getPagesCount > 1" />
       </div>
       <div class="col-sm-12 col-md-6">
-        <chart class="d-none d-md-block" />
+        <chart class="d-none d-md-block p-4" v-if="getPagesCount > 1" :chartdata="chartData" />
       </div>
     </div>
   </div>
@@ -31,7 +31,7 @@ import chart from '../components/chart.vue'
 import addItemForm from '../components/addItemForm.vue'
 import itemsList from '../components/itemsList.vue'
 import pagination from '../components/pagination.vue'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'home',
@@ -39,15 +39,40 @@ export default {
     chart, addItemForm, itemsList, pagination
   },
   data: () => ({
+    chartData: {
+      labels: null,
+      datasets: [
+        {
+          backgroundColor: '#f87979',
+          data: null
+        }
+      ]
+    }
   }),
   methods: {
-    ...mapActions(['fetchData'])
+    ...mapActions(['fetchData']),
+    ...mapMutations(['setHomeKey']),
+    pushData () {
+      this.chartData.labels = this.getPaymentTypesArray
+      this.chartData.datasets[0].data = this.getCategorySumm
+    }
   },
   computed: {
-    ...mapGetters(['getPagesCount'])
+    ...mapGetters(['getPagesCount', 'getPaymentTypesArray', 'getCategorySumm', 'getHomeKey'])
+  },
+  created () {
+    this.getPaymentTypesArray()
+    this.getCategorySumm()
+    this.getHomeKey()
   },
   mounted () {
     this.fetchData()
+    this.pushData()
+  },
+  updated () {
+    if (this.getPagesCount > 1) {
+      this.pushData()
+    }
   }
 }
 </script>

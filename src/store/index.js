@@ -11,13 +11,15 @@ export default new Vuex.Store({
     pagesCount: 0,
     currentPageNumber: 1,
     addFormKey: 0,
+    homeKey: 0,
     paymentTypes: [
       { name: 'еда' },
       { name: 'товары для дома' },
       { name: 'транспорт' },
       { name: 'обучение' },
       { name: 'развлечения' }
-    ]
+    ],
+    paymentTypesSumm: []
   },
   mutations: {
     setPaymentsList (state, payload) {
@@ -40,6 +42,9 @@ export default new Vuex.Store({
     },
     setAddFormKey (state, payload) {
       state.addFormKey += 1
+    },
+    setHomeKey (state, payload) {
+      state.homeKey += 1
     }
   },
   getters: {
@@ -67,6 +72,30 @@ export default new Vuex.Store({
     },
     getAddFormKey: state => {
       return state.addFormKey
+    },
+    getHomeKey: state => {
+      return state.homeKey
+    },
+    getCategorySumm: state => {
+      state.paymentTypesSumm = []
+      for (let i = 0; i < state.paymentTypes.length; i++) {
+        state.paymentTypesSumm.push(0)
+      }
+      for (let i = 0; i < state.paymentTypes.length; i++) {
+        for (let m = 0; m < state.paymentsList.length; m++) {
+          if (state.paymentTypes[i].name === state.paymentsList[m].category) {
+            state.paymentTypesSumm[i] = state.paymentTypesSumm[i] + state.paymentsList[m].value
+          }
+        }
+      }
+      return state.paymentTypesSumm
+    },
+    getPaymentTypesArray: state => {
+      const array = []
+      for (let i = 0; i < state.paymentTypes.length; i++) {
+        array.push(state.paymentTypes[i].name)
+      }
+      return array
     }
   },
   actions: {
