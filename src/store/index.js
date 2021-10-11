@@ -10,14 +10,14 @@ export default new Vuex.Store({
     paymentsPerPage: 8,
     pagesCount: 0,
     currentPageNumber: 1,
+    addFormKey: 0,
     paymentTypes: [
       { name: 'еда' },
       { name: 'товары для дома' },
       { name: 'транспорт' },
       { name: 'обучение' },
       { name: 'развлечения' }
-    ],
-    showModalAddPayment: false
+    ]
   },
   mutations: {
     setPaymentsList (state, payload) {
@@ -29,14 +29,17 @@ export default new Vuex.Store({
     setNewPayment (state, payload) {
       state.paymentsList.push(payload)
     },
+    setEditPayment (state, payload) {
+      state.paymentsList.splice(payload[1], 1, payload[0])
+    },
     setNewPaymentTypes (state, payload) {
       state.paymentTypes.push(payload)
     },
     setDeletePayment (state, payload) {
       state.paymentsList.splice(payload, 1)
     },
-    setEditPayment (state, payload) {
-      state.showModalAddPayment = true
+    setAddFormKey (state, payload) {
+      state.addFormKey += 1
     }
   },
   getters: {
@@ -58,6 +61,12 @@ export default new Vuex.Store({
     },
     getShowModalAddPayment: state => {
       return state.showModalAddPayment
+    },
+    getPaymentsCount: state => {
+      return state.paymentsList.length
+    },
+    getAddFormKey: state => {
+      return state.addFormKey
     }
   },
   actions: {

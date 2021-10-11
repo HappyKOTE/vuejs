@@ -1,6 +1,5 @@
 <template>
-  <div>
-
+  <div :key="getAddFormKey">
     <b-button variant="link" class="p-0" @click="showModal = !showModal"><b-icon-plus-circle></b-icon-plus-circle></b-button>
 
     <b-modal hide-footer hide-header hide-header-close v-model="showModal">
@@ -56,20 +55,34 @@ export default {
     value: 0,
     name: '',
     showModal: false,
-    showCategoryInModal: false
+    showCategoryInModal: false,
+    editIndex: 0,
+    editMode: false
   }),
   methods: {
-    ...mapMutations(['setNewPayment', 'setNewPaymentTypes', 'setCurrentPageNumber']),
+    ...mapMutations(['setNewPayment', 'setNewPaymentTypes', 'setCurrentPageNumber', 'setEditPayment']),
     submit (event) {
-      if (this.category && this.value > 0) {
-        event.preventDefault()
-        const { date, category, value } = this
-        this.setNewPayment({ date, category, value })
-        this.showModal = false
-        this.category = ''
-        this.value = 0
-        this.setCurrentPageNumber(this.getPagesCount)
+      if (!this.editMode) {
+        if (this.category && this.value > 0) {
+          event.preventDefault()
+          const { date, category, value } = this
+          this.setNewPayment({ date, category, value })
+          this.setCurrentPageNumber(this.getPagesCount)
+          this.clearFormData()
+        }
+      } else if (this.editMode) {
+        if (this.category && this.value > 0) {
+          event.preventDefault()
+          const { date, category, value } = this
+          this.setEditPayment([{ date, category, value }, this.editIndex])
+          this.clearFormData()
+        }
       }
+    },
+    clearFormData () {
+      this.showModal = false
+      this.category = ''
+      this.value = 0
     },
     addNewCategory () {
       if (this.categoryValidation()) {
@@ -90,14 +103,26 @@ export default {
     },
     categoryValidation () {
       return this.name.length > 2 && this.name.length < 17
+    },
+    pushEditData () {
+      this.showModal = true
+      this.editMode = true
+      this.editIndex = this.$route.params.payment - 1
+      const indexOnPage = this.$route.params.payment - ((this.getCurrentPageNumber - 1) * this.getPaymentsPerPage) - 1
+      this.date = this.getPaymentsOnPage[indexOnPage].date
+      this.category = this.getPaymentsOnPage[indexOnPage].category
+      this.value = this.getPaymentsOnPage[indexOnPage].value
+      this.edit = !this.edit
     }
   },
   computed: {
-    ...mapGetters(['getPaymentTypes', 'getPagesCount'])
+    ...mapGetters(['getPaymentTypes', 'getPagesCount', 'getPaymentsOnPage', 'getCurrentPageNumber', 'getPaymentsPerPage', 'getPaymentsCount', 'getAddFormKey'])
   },
   created () {
     this.getPaymentTypes()
     this.getPagesCount()
+    this.getPaymentsCount()
+    this.getAddFormKey()
   },
   mounted () {
     this.getTodayDate()
@@ -116,8 +141,23 @@ export default {
       this.name = this.$route.params.category
     }
     if (this.$route.name === 'editPayment') {
-      this.showModal = true
-      console.log(this.$route.params.payment)
+      setTimeout(() => {
+        if (this.$route.params.payment > 0 && this.$route.params.payment <= this.getPaymentsCount) {
+          this.setCurrentPageNumber(Math.floor(this.$route.params.payment / this.getPaymentsPerPage) + 1)
+          this.pushEditData()
+        }
+      }, 2000)
+    }
+  },
+  updated () {
+    if (!this.showModal && this.editMode) {
+      this.editMode = false
+      this.$router.push({ path: '/' })
+    }
+    if (this.$route.name === 'editPayment') {
+      if (this.$route.params.payment > 0 && this.$route.params.payment <= this.getPaymentsCount) {
+        this.pushEditData()
+      }
     }
   }
 }

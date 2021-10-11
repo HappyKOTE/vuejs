@@ -9,6 +9,8 @@
         <b-dropdown-item href="/add/payment/транспорт?value=50">добавить платёж категорию "транспорт" и суммой 50 руб.</b-dropdown-item>
         <b-dropdown-item href="/add/payment/развлечения?value=2000">добавить платёж категорию "развлечения" и суммой 2000 руб.</b-dropdown-item>
         <b-dropdown-item href="/add/payment/развлечения">добавить платёж категорию "развлечения", но без суммы</b-dropdown-item>
+        <b-dropdown-item href="/edit/payment/1">редактировать 1 платёж</b-dropdown-item>
+        <b-dropdown-item href="/edit/payment/20">редактировать 20 платёж</b-dropdown-item>
         <b-dropdown-item href="/a">проверить 404 страницу</b-dropdown-item>
       </b-dropdown>
     </h3>
@@ -37,14 +39,9 @@ export default {
     chart, addItemForm, itemsList, pagination
   },
   data: () => ({
-    editPayment: false
   }),
   methods: {
-    ...mapActions(['fetchData']),
-    editPayment (index) {
-      this.editPayment = true
-      console.log(index)
-    }
+    ...mapActions(['fetchData'])
   },
   computed: {
     ...mapGetters(['getPagesCount'])

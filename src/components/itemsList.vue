@@ -26,11 +26,11 @@
                 <template #button-content>
                   <b-icon icon="three-dots"></b-icon>
                 </template>
-                <b-dropdown-item href="#" @click="editPayment(index)">
+                <b-dropdown-item href="#" @click="editPayment((getCurrentPageNumber-1)*getPaymentsPerPage + index)">
                   <b-icon icon="pencil"></b-icon>
                   редактировать
                 </b-dropdown-item>
-                <b-dropdown-item href="#" @click="deletePayment(index)">
+                <b-dropdown-item href="#" @click="deletePayment((getCurrentPageNumber-1)*getPaymentsPerPage + index)">
                   <b-icon icon="trash" variant="danger"></b-icon>
                   удалить
                 </b-dropdown-item>
@@ -50,10 +50,11 @@ export default {
   name: 'itemsList',
   data: () => ({
     value: 0,
-    max: 1500
+    max: 1500,
+    showEdit: false
   }),
   methods: {
-    ...mapMutations(['setNewPayment', 'setNewPaymentTypes', 'setCurrentPageNumber', 'setDeletePayment', 'setEditPayment']),
+    ...mapMutations(['setNewPayment', 'setNewPaymentTypes', 'setCurrentPageNumber', 'setDeletePayment', 'setEditPayment', 'setAddFormKey']),
     progress () {
       for (let i = 1; i <= this.max; i++) {
         setTimeout(() => {
@@ -62,7 +63,8 @@ export default {
       }
     },
     editPayment (index) {
-      this.$router.push({ path: '/edit/payment/' + index })
+      this.$router.push({ path: '/edit/payment/' + (index + 1) })
+      this.setAddFormKey()
     },
     deletePayment (index) {
       this.setDeletePayment(index)
