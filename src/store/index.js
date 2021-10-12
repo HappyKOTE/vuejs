@@ -12,6 +12,7 @@ export default new Vuex.Store({
     currentPageNumber: 1,
     addFormKey: 0,
     homeKey: 0,
+    metricsKey: 0,
     paymentTypes: [
       { name: 'еда' },
       { name: 'товары для дома' },
@@ -45,6 +46,9 @@ export default new Vuex.Store({
     },
     setHomeKey (state, payload) {
       state.homeKey += 1
+    },
+    setMetricsKey (state, payload) {
+      state.metricsKey += 1
     }
   },
   getters: {
@@ -75,6 +79,9 @@ export default new Vuex.Store({
     },
     getHomeKey: state => {
       return state.homeKey
+    },
+    getMetricsKey: state => {
+      return state.metricsKey
     },
     getCategorySumm: state => {
       state.paymentTypesSumm = []

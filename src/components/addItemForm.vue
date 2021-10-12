@@ -28,7 +28,7 @@
 
       <b-form @submit.stop.prevent="addNewCategory" v-if="showCategoryInModal">
         <div>
-          <b-button variant="link" class="mb-2 p-0" @click="showCategoryInModal = !showCategoryInModal">
+          <b-button variant="link" class="mb-2 p-0" @click="hideCategoryInModal">
             <b-icon-arrow-left></b-icon-arrow-left>
           </b-button>
         </div>
@@ -57,10 +57,11 @@ export default {
     showModal: false,
     showCategoryInModal: false,
     editIndex: 0,
-    editMode: false
+    editMode: false,
+    addPaymentMode: false
   }),
   methods: {
-    ...mapMutations(['setNewPayment', 'setNewPaymentTypes', 'setCurrentPageNumber', 'setEditPayment', 'setHomeKey']),
+    ...mapMutations(['setNewPayment', 'setNewPaymentTypes', 'setCurrentPageNumber', 'setEditPayment', 'setHomeKey', 'setMetricsKey']),
     submit (event) {
       if (!this.editMode) {
         if (this.category && this.value > 0) {
@@ -69,6 +70,7 @@ export default {
           this.setNewPayment({ date, category, value })
           this.setCurrentPageNumber(this.getPagesCount)
           this.clearFormData()
+          this.setMetricsKey()
         }
       } else if (this.editMode) {
         if (this.category && this.value > 0) {
@@ -76,6 +78,7 @@ export default {
           const { date, category, value } = this
           this.setEditPayment([{ date, category, value }, this.editIndex])
           this.clearFormData()
+          this.setMetricsKey()
         }
       }
     },
@@ -84,12 +87,26 @@ export default {
       this.category = ''
       this.value = 0
     },
+    hideCategoryInModal () {
+      this.showCategoryInModal = false
+      this.$router.push({ path: '/' })
+    },
     addNewCategory () {
-      if (this.categoryValidation()) {
-        const { name } = this
-        this.setNewPaymentTypes({ name })
-        this.showCategoryInModal = false
-        this.name = ''
+      if (this.name.length > 2 && this.name.length < 17) {
+        let errorCount = 0
+        for (let i = 0; i < this.getPaymentTypes.length; i++) {
+          if (this.getPaymentTypes[i].name === this.name) {
+            errorCount += 1
+          }
+        }
+        if (errorCount === 0) {
+          const { name } = this
+          this.setNewPaymentTypes({ name })
+          this.name = ''
+          this.category = name
+          this.hideCategoryInModal()
+          this.setMetricsKey()
+        }
       }
     },
     getTodayDate () {
@@ -101,9 +118,6 @@ export default {
       if (dd <= 9) { dd = '0' + String(dd) }
       this.date = yyyy + '-' + mm + '-' + dd
     },
-    categoryValidation () {
-      return this.name.length > 2 && this.name.length < 17
-    },
     pushEditData () {
       this.showModal = true
       this.editMode = true
@@ -112,6 +126,29 @@ export default {
       this.date = this.getPaymentsOnPage[indexOnPage].date
       this.category = this.getPaymentsOnPage[indexOnPage].category
       this.value = this.getPaymentsOnPage[indexOnPage].value
+    },
+    checkRoutes () {
+      if (this.$route.name === 'addPayment') {
+        this.showModal = true
+        this.addPaymentMode = true
+        const formValue = this.$route.fullPath.split('?', 2)[1].split('=', 2)
+        if (formValue[0] === 'value') {
+          this.value = formValue[1]
+        }
+      }
+      if (this.$route.name === 'addCategory') {
+        this.showModal = true
+        this.showCategoryInModal = true
+        this.name = this.$route.params.category
+      }
+      if (this.$route.name === 'editPayment') {
+        if (!this.showModal) {
+          if (this.$route.params.payment > 0 && this.$route.params.payment <= this.getPaymentsCount) {
+            this.setCurrentPageNumber(Math.ceil(this.$route.params.payment / this.getPaymentsPerPage))
+            this.pushEditData()
+          }
+        }
+      }
     }
   },
   computed: {
@@ -126,40 +163,22 @@ export default {
   mounted () {
     this.getTodayDate()
     this.categoryValidation()
-    this.pageRoute = this.$route.name
-    if (this.$route.name === 'addPayment') {
-      this.showModal = true
-      const formValue = this.$route.fullPath.split('?', 2)[1].split('=', 2)
-      if (formValue[0] === 'value') {
-        this.value = formValue[1]
-      }
-    }
-    if (this.$route.name === 'addCategory') {
-      this.showModal = true
-      this.showCategoryInModal = true
-      this.name = this.$route.params.category
-    }
-    if (this.$route.name === 'editPayment') {
-      setTimeout(() => {
-        if (this.$route.params.payment > 0 && this.$route.params.payment <= this.getPaymentsCount) {
-          this.setCurrentPageNumber(Math.floor(this.$route.params.payment / this.getPaymentsPerPage) + 1)
-          this.pushEditData()
-        }
-      }, 2000)
-    }
+    this.checkRoutes()
   },
   updated () {
     if (!this.showModal && this.editMode) {
       this.editMode = false
       this.$router.push({ path: '/' })
     }
-    if (this.$route.name === 'editPayment') {
-      if (!this.showModal) {
-        if (this.$route.params.payment > 0 && this.$route.params.payment <= this.getPaymentsCount) {
-          this.pushEditData()
-        }
-      }
+    if (!this.showModal && this.addPaymentMode) {
+      this.addPaymentMode = false
+      this.$router.push({ path: '/' })
     }
+    if (!this.showModal && this.showCategoryInModal) {
+      this.showCategoryInModal = false
+      this.$router.push({ path: '/' })
+    }
+    this.checkRoutes()
   }
 }
 </script>

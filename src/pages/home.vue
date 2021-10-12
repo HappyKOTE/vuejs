@@ -2,77 +2,58 @@
   <div :key="getHomeKey">
     <h3 class="mb-5">
       учёт финансов
-      <addItemForm class="d-inline-block ms-2" />
+      <AddItemForm class="d-inline-block ms-2" />
       <b-dropdown right text="роуты" class="float-end">
-        <b-dropdown-item href="/add/category/разное">добавить новую категорию "разное"</b-dropdown-item>
-        <b-dropdown-item href="/add/payment/еда?value=200">добавить платёж категорию "еда" и суммой 200 руб.</b-dropdown-item>
-        <b-dropdown-item href="/add/payment/транспорт?value=50">добавить платёж категорию "транспорт" и суммой 50 руб.</b-dropdown-item>
-        <b-dropdown-item href="/add/payment/развлечения?value=2000">добавить платёж категорию "развлечения" и суммой 2000 руб.</b-dropdown-item>
-        <b-dropdown-item href="/add/payment/развлечения">добавить платёж категорию "развлечения", но без суммы</b-dropdown-item>
-        <b-dropdown-item href="/edit/payment/1">редактировать 1 платёж</b-dropdown-item>
-        <b-dropdown-item href="/edit/payment/20">редактировать 20 платёж</b-dropdown-item>
-        <b-dropdown-item href="/a">проверить 404 страницу</b-dropdown-item>
+        <b-dropdown-item href="#" @click="pushRouter('/add/category/разное')">добавить новую категорию "разное"</b-dropdown-item>
+        <b-dropdown-item href="#" @click="pushRouter('/add/payment/еда?value=200')">добавить платёж категорию "еда" и суммой 200 руб.</b-dropdown-item>
+        <b-dropdown-item href="#" @click="pushRouter('/add/payment/транспорт?value=50')">добавить платёж категорию "транспорт" и суммой 50 руб.</b-dropdown-item>
+        <b-dropdown-item href="#" @click="pushRouter('/add/payment/развлечения?value=2000')">добавить платёж категорию "развлечения" и суммой 2000 руб.</b-dropdown-item>
+        <b-dropdown-item href="#" @click="pushRouter('/add/payment/развлечения')">добавить платёж категорию "развлечения", но без суммы</b-dropdown-item>
+        <b-dropdown-item href="#" @click="pushRouter('/edit/payment/1')">редактировать 1 платёж</b-dropdown-item>
+        <b-dropdown-item href="#" @click="pushRouter('/edit/payment/20')">редактировать 20 платёж</b-dropdown-item>
+        <b-dropdown-item href="#" @click="pushRouter('/a')">проверить 404 страницу</b-dropdown-item>
       </b-dropdown>
     </h3>
     <div class="row">
       <div class="col-sm-12 col-md-6">
-        <itemsList class="rounded bg-white mb-3 p-4" />
-        <pagination v-if="getPagesCount > 1" />
+        <ItemsList class="rounded bg-white mb-3 p-4" />
+        <Pagination v-if="getPagesCount > 1" />
       </div>
       <div class="col-sm-12 col-md-6">
-        <chart class="d-none d-md-block p-4" v-if="getPagesCount > 1" :chartdata="chartData" />
+        <Metrics class="d-none d-md-block p-4" v-if="getPagesCount > 1" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import chart from '../components/chart.vue'
-import addItemForm from '../components/addItemForm.vue'
-import itemsList from '../components/itemsList.vue'
-import pagination from '../components/pagination.vue'
+import Metrics from '../components/metrics.vue'
+import AddItemForm from '../components/addItemForm.vue'
+import ItemsList from '../components/itemsList.vue'
+import Pagination from '../components/pagination.vue'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'home',
   components: {
-    chart, addItemForm, itemsList, pagination
+    Metrics, AddItemForm, ItemsList, Pagination
   },
-  data: () => ({
-    chartData: {
-      labels: null,
-      datasets: [
-        {
-          backgroundColor: '#f87979',
-          data: null
-        }
-      ]
-    }
-  }),
   methods: {
     ...mapActions(['fetchData']),
-    ...mapMutations(['setHomeKey']),
-    pushData () {
-      this.chartData.labels = this.getPaymentTypesArray
-      this.chartData.datasets[0].data = this.getCategorySumm
+    ...mapMutations(['setHomeKey', 'setAddFormKey']),
+    pushRouter (routePath) {
+      this.$router.push({ path: routePath })
+      this.setAddFormKey()
     }
   },
   computed: {
     ...mapGetters(['getPagesCount', 'getPaymentTypesArray', 'getCategorySumm', 'getHomeKey'])
   },
   created () {
-    this.getPaymentTypesArray()
-    this.getCategorySumm()
     this.getHomeKey()
   },
   mounted () {
     this.fetchData()
-    this.pushData()
-  },
-  updated () {
-    if (this.getPagesCount > 1) {
-      this.pushData()
-    }
   }
 }
 </script>
