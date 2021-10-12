@@ -6,7 +6,14 @@ export default {
   data: () => ({
     options: {
       responsive: true,
-      maintainAspectRatio: false
+      maintainAspectRatio: false,
+      legend: {
+        position: 'bottom',
+        labels: {
+          padding: 40,
+          usePointStyle: true
+        }
+      }
     }
   }),
   props: ['chartdata'],

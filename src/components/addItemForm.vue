@@ -131,6 +131,7 @@ export default {
       if (this.$route.name === 'addPayment') {
         this.showModal = true
         this.addPaymentMode = true
+        this.category = this.$route.params.payment
         const formValue = this.$route.fullPath.split('?', 2)[1].split('=', 2)
         if (formValue[0] === 'value') {
           this.value = formValue[1]

@@ -20,7 +20,7 @@
         <Pagination v-if="getPagesCount > 1" />
       </div>
       <div class="col-sm-12 col-md-6">
-        <Metrics class="d-none d-md-block p-4" v-if="getPagesCount > 1" />
+        <Metrics class="d-none d-md-block" v-if="getPagesCount > 1" />
       </div>
     </div>
   </div>
