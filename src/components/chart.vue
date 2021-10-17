@@ -10,7 +10,7 @@ export default {
       legend: {
         position: 'bottom',
         labels: {
-          padding: 40,
+          padding: 30,
           usePointStyle: true
         }
       }

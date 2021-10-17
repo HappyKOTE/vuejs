@@ -20,7 +20,8 @@ export default new Vuex.Store({
       { name: 'обучение' },
       { name: 'развлечения' }
     ],
-    paymentTypesSumm: []
+    paymentTypesSumm: [],
+    paymentTypesArray: []
   },
   mutations: {
     setPaymentsList (state, payload) {
@@ -98,11 +99,11 @@ export default new Vuex.Store({
       return state.paymentTypesSumm
     },
     getPaymentTypesArray: state => {
-      const array = []
+      state.paymentTypesArray = []
       for (let i = 0; i < state.paymentTypes.length; i++) {
-        array.push(state.paymentTypes[i].name)
+        state.paymentTypesArray.push(state.paymentTypes[i].name)
       }
-      return array
+      return state.paymentTypesArray
     }
   },
   actions: {

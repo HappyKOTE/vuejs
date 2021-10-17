@@ -9,17 +9,16 @@ import Chart from './chart.vue'
 import { mapGetters, mapMutations } from 'vuex'
 
 export default {
-  name: 'metrics',
   components: {
     Chart
   },
   data: () => ({
     chartData: {
-      labels: null,
+      labels: [],
       datasets: [
         {
-          backgroundColor: [],
-          data: null
+          backgroundColor: ['#0d6efd', '#6610f2', '#6f42c1', '#d63384', '#dc3545', '#fd7e14', '#ffc107', '#198754', '#20c997', '#0dcaf0'],
+          data: []
         }
       ]
     }
@@ -43,13 +42,8 @@ export default {
     ...mapGetters(['getPaymentTypesArray', 'getCategorySumm', 'getMetricsKey'])
   },
   created () {
-    this.getPaymentTypesArray()
-    this.getCategorySumm()
-    this.getMetricsKey()
-  },
-  mounted () {
-    this.pushData()
     this.setMetricsKey()
+    this.pushData()
   },
   updated () {
     this.pushData()

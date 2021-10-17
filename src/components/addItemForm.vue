@@ -48,7 +48,6 @@
 import { mapMutations, mapGetters } from 'vuex'
 
 export default {
-  name: 'addItemForm',
   data: () => ({
     date: '',
     category: '',
@@ -155,16 +154,9 @@ export default {
   computed: {
     ...mapGetters(['getPaymentTypes', 'getPagesCount', 'getPaymentsOnPage', 'getCurrentPageNumber', 'getPaymentsPerPage', 'getPaymentsCount', 'getAddFormKey'])
   },
-  created () {
-    this.getPaymentTypes()
-    this.getPagesCount()
-    this.getPaymentsCount()
-    this.getAddFormKey()
-  },
   mounted () {
-    this.getTodayDate()
-    this.categoryValidation()
     this.checkRoutes()
+    this.getTodayDate()
   },
   updated () {
     if (!this.showModal && this.editMode) {
@@ -185,5 +177,4 @@ export default {
 </script>
 
 <style>
-#addItemModal .modal-content { border: none !important; }
 </style>

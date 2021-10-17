@@ -1,22 +1,18 @@
 <template>
-<div>
-  <div v-if="getPaymentsOnPage.length === 0" class="text-center">
-    <b-progress :value="value" :max="max" height="5px"></b-progress>
-    загрузка данных
-  </div>
-  <transition name="fade">
-    <table class="table table-borderless m-0" v-if="getPaymentsOnPage.length > 0">
-        <thead>
-            <tr class="align-middle">
-                <th scope="col" width="10%">#</th>
-                <th scope="col" width="30%">дата</th>
-                <th scope="col" width="30%">категория</th>
-                <th scope="col" width="20%" class="text-end">рубли</th>
-                <th scope="col" width="10%"></th>
-            </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(payment, index) in getPaymentsOnPage" :key="payment" class="align-middle">
+  <div>
+    <table class="table table-borderless m-0">
+      <thead>
+        <tr class="align-middle">
+          <th scope="col" width="10%">#</th>
+          <th scope="col" width="30%">дата</th>
+          <th scope="col" width="30%">категория</th>
+          <th scope="col" width="18%" class="text-end">рубли</th>
+          <th scope="col" width="12%"></th>
+        </tr>
+      </thead>
+      <transition name="fade">
+        <tbody v-if="getPaymentsOnPage.length > 0">
+          <tr v-for="(payment, index) in getPaymentsOnPage" :key="index" class="align-middle">
             <td>{{ (getCurrentPageNumber-1)*getPaymentsPerPage + index + 1 }}</td>
             <td>{{ payment.date | moment("D MMMM YYYY") }}</td>
             <td>{{ payment.category }}</td>
@@ -38,52 +34,42 @@
             </td>
           </tr>
         </tbody>
+      </transition>
     </table>
-  </transition>
-</div>
+    <div v-if="getPaymentsOnPage.length === 0" class="text-center mt-5 mb-5">
+      <strong>
+        загрузка данных
+        <b-icon icon="gear" animation="spin"></b-icon>
+      </strong>
+    </div>
+  </div>
 </template>
 
 <script>
 import { mapMutations, mapGetters } from 'vuex'
 
 export default {
-  name: 'itemsList',
-  data: () => ({
-    value: 0,
-    max: 1500,
-    showEdit: false
-  }),
   methods: {
-    ...mapMutations(['setNewPayment', 'setNewPaymentTypes', 'setCurrentPageNumber', 'setDeletePayment', 'setEditPayment', 'setAddFormKey', 'setHomeKey', 'setMetricsKey']),
-    progress () {
-      for (let i = 1; i <= this.max; i++) {
-        setTimeout(() => {
-          this.value = this.value + 1
-        }, 1)
-      }
-    },
+    ...mapMutations(['setNewPayment', 'setNewPaymentTypes', 'setCurrentPageNumber', 'setDeletePayment', 'setEditPayment', 'setAddFormKey', 'setMetricsKey']),
     editPayment (index) {
       this.$router.push({ path: '/edit/payment/' + (index + 1) })
       this.setAddFormKey()
     },
     deletePayment (index) {
       this.setDeletePayment(index)
+      if (this.getPaymentsOnPage.length === 0) {
+        this.setCurrentPageNumber(this.getCurrentPageNumber - 1)
+      }
       this.setMetricsKey()
     }
   },
   computed: {
     ...mapGetters(['getPaymentsOnPage', 'getCurrentPageNumber', 'getPaymentsPerPage'])
-  },
-  created () {
-    this.getPaymentsOnPage()
-  },
-  mounted () {
-    this.progress()
   }
 }
 </script>
 
 <style scoped lang="scss">
-.fade-enter-active, .fade-leave-active { transition: opacity 0.5s; }
+.fade-enter-active, .fade-leave-active { transition: opacity 1s; }
 .fade-enter, .fade-leave-to { opacity: 0; }
 </style>

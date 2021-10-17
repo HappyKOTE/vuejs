@@ -1,5 +1,5 @@
 <template>
-  <div :key="getHomeKey">
+  <div>
     <h3 class="mb-5">
       учёт финансов
       <AddItemForm class="d-inline-block ms-2" />
@@ -20,7 +20,7 @@
         <Pagination v-if="getPagesCount > 1" />
       </div>
       <div class="col-sm-12 col-md-6">
-        <Metrics class="d-none d-md-block" v-if="getPagesCount > 1" />
+        <Metrics v-if="getPagesCount > 1" />
       </div>
     </div>
   </div>
@@ -34,7 +34,6 @@ import Pagination from '../components/pagination.vue'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
-  name: 'home',
   components: {
     Metrics, AddItemForm, ItemsList, Pagination
   },
@@ -47,10 +46,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getPagesCount', 'getPaymentTypesArray', 'getCategorySumm', 'getHomeKey'])
-  },
-  created () {
-    this.getHomeKey()
+    ...mapGetters(['getPagesCount', 'getPaymentTypesArray', 'getCategorySumm'])
   },
   mounted () {
     this.fetchData()

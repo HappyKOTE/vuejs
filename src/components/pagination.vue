@@ -18,7 +18,6 @@
 import { mapMutations, mapGetters } from 'vuex'
 
 export default {
-  name: 'pagination',
   methods: {
     ...mapMutations(['setCurrentPageNumber']),
     changePage (n) {
@@ -39,10 +38,6 @@ export default {
   },
   computed: {
     ...mapGetters(['getPagesCount', 'getCurrentPageNumber'])
-  },
-  created () {
-    this.getPagesCount()
-    this.getCurrentPageNumber()
   }
 }
 </script>
