@@ -32,6 +32,11 @@ const routes = new VueRouter({
       path: '/edit/payment/:payment',
       name: 'editPayment',
       component: home
+    },
+    {
+      path: '/calc/',
+      name: 'calculator',
+      component: () => import('../pages/calc.vue')
     }
   ]
 })

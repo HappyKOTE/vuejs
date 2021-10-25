@@ -12,6 +12,7 @@
         <b-dropdown-item href="#" @click="pushRouter('/edit/payment/1')">редактировать 1 платёж</b-dropdown-item>
         <b-dropdown-item href="#" @click="pushRouter('/edit/payment/20')">редактировать 20 платёж</b-dropdown-item>
         <b-dropdown-item href="#" @click="pushRouter('/a')">проверить 404 страницу</b-dropdown-item>
+        <b-dropdown-item href="#" @click="pushRouter('/calc/')">калькулятор</b-dropdown-item>
       </b-dropdown>
     </h3>
     <div class="row">
